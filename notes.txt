@@ -1,0 +1,4 @@
+https://github.com/milon/barcode
+https://laravel.com/docs/9.x/socialite
+https://github.com/benwilkins/laravel-fcm-notification
+https://github.com/AndreasElia/laravel-api-to-postman?ref=laravelnews

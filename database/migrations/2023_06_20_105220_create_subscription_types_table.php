@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('subscription_types', function (Blueprint $table) {
+            $table->bigInteger('id', true);
+            $table->string('name', 1000)->nullable();
+            $table->bigInteger('platform_id')->index('fk_subscription_types_platform_id');
+            $table->double('monthly_fee');
+            $table->double('yearly_fee');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrentOnUpdate()->useCurrent();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('subscription_types');
+    }
+};

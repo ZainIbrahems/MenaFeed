@@ -1,0 +1,37 @@
+{
+  "name": "EliaMeet",
+  "description": "Signalling server for EliaMeet",
+  "version": "2.0.2",
+  "scripts": {
+    "local": "node local.js",
+    "production": "pm2 start app.js --name 'EliaMeet'",
+    "turn": "pm2 start turnserver",
+    "list": "pm2 list",
+    "delete": "pm2 delete 'EliaMeet'",
+    "restart": "pm2 restart 'EliaMeet'",
+    "log": "pm2 log 'EliaMeet'",
+    "log2": "pm2 log 'turnserver'",
+    "restart2": "pm2 restart 'turnserver'",
+    "delete2": "pm2 restart 'turnserver'"
+  },
+  "dependencies": {
+    "@socket.io/redis-streams-adapter": "^0.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "",
+    "ioredis": "^5.3.2",
+    "node-stun": "^0.1.2",
+    "node-turn": "0.0.6",
+    "nodemon": "^2.0.7",
+    "path": "^0.12.7",
+    "pm2": "^5.1.2",
+    "record-entire-meeting": "^1.0.2",
+    "redis": "^4.6.7",
+    "socket.io": "^3.1.2",
+    "socket.io-redis": "^6.1.1",
+    "socketio-file-upload": "^0.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1"
+  }
+}

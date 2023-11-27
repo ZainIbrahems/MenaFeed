@@ -1,0 +1,330 @@
+* {
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    cursor: default;
+    /* border: 1px solid black; */
+}
+
+body {
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    background-color: #f4f4f4;
+}
+
+.top {
+    height: 48px;
+    background-color: #d9d9d9;
+}
+
+.main-header {
+    padding: 15px;
+    color: #1b1b1b;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 36.31px;
+    margin: 0;
+    border: none;
+}
+
+.main-container {
+    max-height: 100%;
+    max-width: 35%;
+    padding: 10px;
+    margin: 30px auto 30px auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 25px;
+    background-color: white;
+    box-shadow: 0px 2px 4px -1px rgba(33, 33, 33, 0.25);
+    border-radius: 40px;
+}
+
+.main-container > h3 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 40px;
+    color: #1b1b1b;
+}
+
+.main-container > p {
+    width: 100%;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    color: #1b1b1b;
+    text-align: center;
+}
+
+.main-container-image, #container-with-image {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 80px;
+    background-color: #f4f4f4;
+}
+
+.main-container-image > div {
+    width: fit-content;
+    padding: 30px;
+    border-radius: 80px;
+    background-color: #2688eb;
+    color: rgba(255, 255, 255, 0.98);
+    font-weight: 600px;
+    font-size: 48px;
+    line-height: 52px;
+}
+
+.main-container-image > img, #container-with-image > img:nth-of-type(2) {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 35px;
+    height: 35px;
+    padding: 8px;
+    background-color: #e64646;
+    border-radius: 36px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.main-container-image > p {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #1b1b1b;
+    border-radius: 16px;
+}
+
+.share-feed {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.share-feed > p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.001em;
+    color: #000000;
+}
+
+.settings {
+    display: flex;
+    flex-direction: row;
+    align-self: flex-start;
+    gap: 10px;
+    user-select: none;
+}
+
+.settings > img {
+    width: 30px;
+    height: 30px;
+    padding: 6px;
+    background-color: #a3a3a3;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#setting-button {
+    background-color: white !important;
+    border: 1px solid #a3a3a3;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.join-form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.join-form form{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.join-form   input {
+    display: block;
+    width: 75%;
+    padding: 12px 16px;
+    background: #f4f4f4;
+    border: none;
+    border-radius: 70px;
+    cursor: text;
+}
+
+.join-form  button {
+    display: block;
+    padding: 6px 10px;
+    text-decoration: none !important;
+    color: white !important;
+    background-color: #2688eb;
+    border: 1px solid #2688eb;
+    border-radius: 44px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    cursor: pointer !important;
+}
+
+#container-with-image {
+    padding: 0;
+}
+
+#container-with-image > img:nth-of-type(1) {
+    height: 100%;
+    max-height: 302px;
+    width: 100%;
+    border-radius: 15px;
+}
+
+@media only screen and (max-width: 480px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 20px;
+    }
+
+    .main-container {
+        max-width: 100%;
+        margin: auto;
+        gap: 10px;
+        justify-self: center;
+    }
+
+    .main-container > p {
+        text-align: center;
+    }
+
+    .join-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding-block: 10px;
+    }
+
+    .join-form > input {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    .main-container {
+        max-width: 90%;
+    }
+
+    .main-container > p {
+        text-align: center;
+    }
+
+    .join-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding-block: 10px;
+    }
+
+    .join-form > input {
+        max-width: 500px;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+    .main-container {
+        max-width: 70%;
+    }
+}
+
+@media only screen and (min-width: 1025px) and (max-width: 1200px) {
+    .main-container {
+        max-width: 50%;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .join-form > input {
+        max-width: 72%;
+    }
+}

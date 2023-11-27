@@ -1,0 +1,15 @@
+@keyframes appearFromRight {
+    from {
+        right: -100%;
+    }
+
+    to {
+        right: 1rem;
+    }
+}
+
+@keyframes disappearToRight {
+    to {
+        right: -100%;
+    }
+}
