@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageServiceProvider;
+use Larapack\DoctrineSupport\DoctrineSupportServiceProvider;
 use TCG\Voyager\Events\FormFieldsRegistered;
 use TCG\Voyager\Facades\Voyager as VoyagerFacade;
 use TCG\Voyager\FormFields\After\DescriptionHandler;
@@ -58,6 +59,7 @@ class VoyagerServiceProvider extends ServiceProvider
         $this->app->register(VoyagerEventServiceProvider::class);
         $this->app->register(ImageServiceProvider::class);
         $this->app->register(VoyagerDummyServiceProvider::class);
+        $this->app->register(DoctrineSupportServiceProvider::class);
 
         $loader = AliasLoader::getInstance();
         $loader->alias('Voyager', VoyagerFacade::class);
@@ -249,8 +251,8 @@ class VoyagerServiceProvider extends ServiceProvider
             'voyager_avatar' => [
                 "{$publishablePath}/dummy_content/users/" => storage_path('app/public/users'),
             ],
-            'seeders' => [
-                "{$publishablePath}/database/seeders/" => database_path('seeders'),
+            'seeds' => [
+                "{$publishablePath}/database/seeds/" => database_path(Seed::getFolderName()),
             ],
             'config' => [
                 "{$publishablePath}/config/voyager.php" => config_path('voyager.php'),

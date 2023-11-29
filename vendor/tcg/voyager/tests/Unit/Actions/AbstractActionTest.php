@@ -39,7 +39,7 @@ class AbstractActionTest extends TestCase
     {
         $stub = $this->getMockBuilder(AbstractAction::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getDefaultRoute'])
+            ->setMethods(['getDefaultRoute'])
             ->getMockForAbstractClass();
 
         // The `getDefaultRoute` method is called as default inside the
@@ -59,7 +59,7 @@ class AbstractActionTest extends TestCase
     {
         $stub = $this->getMockBuilder(AbstractAction::class)
             ->disableOriginalConstructor()
-            ->addMethods(['getCustomRoute'])
+            ->setMethods(['getCustomRoute'])
             ->getMockForAbstractClass();
 
         // The key that's passed to the `getRoute` method will be capitalized
@@ -80,7 +80,7 @@ class AbstractActionTest extends TestCase
     {
         $stub = $this->getMockBuilder(AbstractAction::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getAttributes'])
+            ->setMethods(['getAttributes'])
             ->getMockForAbstractClass();
 
         $stub->expects($this->any())
@@ -115,7 +115,7 @@ class AbstractActionTest extends TestCase
     {
         $stub = $this->getMockBuilder(AbstractAction::class)
             ->setConstructorArgs([$this->userDataType, $this->user])
-            ->onlyMethods(['getDataType'])
+            ->setMethods(['getDataType'])
             ->getMockForAbstractClass();
 
         $stub->expects($this->any())
@@ -133,7 +133,7 @@ class AbstractActionTest extends TestCase
     {
         $stub = $this->getMockBuilder(AbstractAction::class)
             ->setConstructorArgs([$this->userDataType, $this->user])
-            ->onlyMethods(['getDataType'])
+            ->setMethods(['getDataType'])
             ->getMockForAbstractClass();
 
         $stub->expects($this->any())

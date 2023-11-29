@@ -6,4 +6,3 @@ build
 .lock
 composer.lock
 .phpunit.result.cache
-.phpunit.cache
