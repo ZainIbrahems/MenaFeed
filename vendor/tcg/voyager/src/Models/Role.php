@@ -31,15 +31,4 @@ class Role extends Model
     {
         return RoleFactory::new();
     }
-
-
-    public function scopeShow($q)
-    {
-        if (auth('web')->user()->role_id != 1) {
-            return $q->where('id', '<>', 1);
-        }
-//        else{
-//            return $q->whereNotIn('id', [getRoleID('provider'),getRoleID('client')]);
-//        }
-    }
 }

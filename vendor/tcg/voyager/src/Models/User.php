@@ -4,7 +4,6 @@ namespace TCG\Voyager\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use TCG\Voyager\Contracts\User as UserContract;
 use TCG\Voyager\Tests\Database\Factories\UserFactory;
@@ -14,15 +13,13 @@ class User extends Authenticatable implements UserContract
 {
     use VoyagerUser, HasFactory;
 
-    use SoftDeletes;
-
     protected $guarded = [];
 
     public $additional_attributes = ['locale'];
 
     public function getAvatarAttribute($value)
     {
-        return $value ?? config('voyager.user.default_personal_picture', 'users/default.png');
+        return $value ?? config('voyager.user.default_avatar', 'users/default.png');
     }
 
     public function setCreatedAtAttribute($value)
@@ -37,7 +34,7 @@ class User extends Authenticatable implements UserContract
 
     public function getSettingsAttribute($value)
     {
-        return collect(json_decode($value));
+        return collect(json_decode((string)$value));
     }
 
     public function setLocaleAttribute($value)
@@ -53,23 +50,5 @@ class User extends Authenticatable implements UserContract
     protected static function newFactory()
     {
         return UserFactory::new();
-    }
-
-
-    public function scopeShow($q)
-    {
-        if (auth('web')->user()->role_id != 1) {
-            return $q->where('role_id', '<>', getRoleID('sm-admin'))
-                ->where('role_id', '<>', getRoleID('provider'));
-        }
-    }
-
-    public function scopeAddedBy($q)
-    {
-        if (auth('web')->user()->role_id == getRoleID('provider')) {
-            return $q->where('id', auth('web')->user()->id);
-        } else {
-            return $q->where('role_id', getRoleID('provider'));
-        }
     }
 }

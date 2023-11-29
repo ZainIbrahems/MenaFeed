@@ -2,7 +2,6 @@
 
 namespace TCG\Voyager\Http\Controllers\ContentTypes;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Constraint;
@@ -15,24 +14,19 @@ class Image extends BaseType
         if ($this->request->hasFile($this->row->field)) {
             $file = $this->request->file($this->row->field);
 
-            if ($file->getClientOriginalExtension() == 'svg') {
-                $file = (new File($this->request, $this->slug, $this->row, $this->options))->handle();
-                return getFilePathSvg($file);
-            }
-
-            $path = $this->slug . DIRECTORY_SEPARATOR . date('FY') . DIRECTORY_SEPARATOR;
+            $path = $this->slug.DIRECTORY_SEPARATOR.date('FY').DIRECTORY_SEPARATOR;
 
             $filename = $this->generateFileName($file, $path);
 
             $image = InterventionImage::make($file)->orientate();
 
-            $fullPath = $path . $filename . '.' . $file->getClientOriginalExtension();
+            $fullPath = $path.$filename.'.'.$file->getClientOriginalExtension();
 
             $resize_width = null;
             $resize_height = null;
             if (isset($this->options->resize) && (
-                    isset($this->options->resize->width) || isset($this->options->resize->height)
-                )) {
+                isset($this->options->resize->width) || isset($this->options->resize->height)
+            )) {
                 if (isset($this->options->resize->width)) {
                     $resize_width = $this->options->resize->width;
                 }
@@ -46,30 +40,23 @@ class Image extends BaseType
 
             $resize_quality = isset($this->options->quality) ? intval($this->options->quality) : 75;
 
-            if (isset($this->options->stretch)) {
-                $image = $image->resize(
-                    $resize_width,
-                    $resize_height
-                )->encode($file->getClientOriginalExtension(), $resize_quality);
-            } else {
-                $image = $image->resize(
-                    $resize_width,
-                    $resize_height,
-                    function (Constraint $constraint) {
-                        $constraint->aspectRatio();
-                        if (isset($this->options->upsize) && !$this->options->upsize) {
-                            $constraint->upsize();
-                        }
+            $image = $image->resize(
+                $resize_width,
+                $resize_height,
+                function (Constraint $constraint) {
+                    $constraint->aspectRatio();
+                    if (isset($this->options->upsize) && !$this->options->upsize) {
+                        $constraint->upsize();
                     }
-                )->encode($file->getClientOriginalExtension(), $resize_quality);
-            }
+                }
+            )->encode($file->getClientOriginalExtension(), $resize_quality);
 
             if ($this->is_animated_gif($file)) {
                 Storage::disk(config('voyager.storage.disk'))->put($fullPath, file_get_contents($file), 'public');
-                $fullPathStatic = $path . $filename . '-static.' . $file->getClientOriginalExtension();
-                Storage::disk(config('voyager.storage.disk'))->put($fullPathStatic, (string)$image, 'public');
+                $fullPathStatic = $path.$filename.'-static.'.$file->getClientOriginalExtension();
+                Storage::disk(config('voyager.storage.disk'))->put($fullPathStatic, (string) $image, 'public');
             } else {
-                Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string)$image, 'public');
+                Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public');
             }
 
             if (isset($this->options->thumbnails)) {
@@ -109,8 +96,8 @@ class Image extends BaseType
                     }
 
                     Storage::disk(config('voyager.storage.disk'))->put(
-                        $path . $filename . '-' . $thumbnails->name . '.' . $file->getClientOriginalExtension(),
-                        (string)$image,
+                        $path.$filename.'-'.$thumbnails->name.'.'.$file->getClientOriginalExtension(),
+                        (string) $image,
                         'public'
                     );
                 }
@@ -129,18 +116,18 @@ class Image extends BaseType
     protected function generateFileName($file, $path)
     {
         if (isset($this->options->preserveFileUploadName) && $this->options->preserveFileUploadName) {
-            $filename = basename($file->getClientOriginalName(), '.' . $file->getClientOriginalExtension());
+            $filename = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension());
             $filename_counter = 1;
 
             // Make sure the filename does not exist, if it does make sure to add a number to the end 1, 2, 3, etc...
-            while (Storage::disk(config('voyager.storage.disk'))->exists($path . $filename . '.' . $file->getClientOriginalExtension())) {
-                $filename = basename($file->getClientOriginalName(), '.' . $file->getClientOriginalExtension()) . (string)($filename_counter++);
+            while (Storage::disk(config('voyager.storage.disk'))->exists($path.$filename.'.'.$file->getClientOriginalExtension())) {
+                $filename = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension()).(string) ($filename_counter++);
             }
         } else {
             $filename = Str::random(20);
 
             // Make sure the filename does not exist, if it does, just regenerate
-            while (Storage::disk(config('voyager.storage.disk'))->exists($path . $filename . '.' . $file->getClientOriginalExtension())) {
+            while (Storage::disk(config('voyager.storage.disk'))->exists($path.$filename.'.'.$file->getClientOriginalExtension())) {
                 $filename = Str::random(20);
             }
         }

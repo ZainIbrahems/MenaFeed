@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => 'Հեղինակ',
-        'personal_picture'           => 'Անձնանշան',
+        'avatar'           => 'Անձնանշան',
         'body'             => 'Մարմին',
         'category'         => 'Կատեգորիա',
         'created_at'       => 'Ստեղծված է',

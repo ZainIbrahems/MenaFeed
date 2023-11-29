@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'           => 'Ảnh đại diện',
+    'avatar'           => 'Ảnh đại diện',
     'edit'             => 'Chính sửa hồ sơ',
     'edit_user'        => 'Chỉnh sửa user',
     'password'         => 'Mật khẩu',

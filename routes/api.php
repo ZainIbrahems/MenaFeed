@@ -27,12 +27,10 @@ use App\Http\Controllers\Api\v1\LiveStreamReactionController;
 use App\Http\Controllers\Api\v1\LiveStreamCommentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Http\Request;
 
 Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_lang']], function () {
-    Route::get('/getdate',function(){
-        return Redis::connection()->ping();
-        return now();
-    });
+
     Route::get('/start', [ConfigController::class, 'start']);
     Route::get('/countries', [ConfigController::class, 'countries']);
     Route::get('/home-section/{id}', [ConfigController::class, 'home_section']);
@@ -126,12 +124,12 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
         Route::get('sub-sub-category/{id?}', [PlatformController::class, 'sub_sub_category']);
     });
     Route::group(['prefix' => 'markets'], function () {
-//        Route::get('fields', [PlatformController::class, 'fields']);
+        //        Route::get('fields', [PlatformController::class, 'fields']);
 //        Route::get('data/{id?}', [PlatformController::class, 'data']);
 //        Route::get('plans/{id?}', [PlatformController::class, 'plans']);
 //        Route::get('sections/{id?}', [PlatformController::class, 'sections']);
         Route::get('categories', [MarketPlaceController::class, 'categories']);
-//        Route::get('categories-select2/{platform_id?}', [PlatformController::class, 'categoriesSelect2'])->name('platform_categories');
+        //        Route::get('categories-select2/{platform_id?}', [PlatformController::class, 'categoriesSelect2'])->name('platform_categories');
         Route::get('category/{id?}', [MarketPlaceController::class, 'category']);
         Route::get('sub-category/{id?}', [MarketPlaceController::class, 'sub_category']);
         Route::get('sub-sub-category/{id?}', [MarketPlaceController::class, 'sub_sub_category']);

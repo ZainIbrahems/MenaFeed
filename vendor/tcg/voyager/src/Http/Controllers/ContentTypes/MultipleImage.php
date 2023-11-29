@@ -25,23 +25,9 @@ class MultipleImage extends BaseType
             if (!$file->isValid()) {
                 continue;
             }
-            $mimeType = $file->getClientmimeType();
-//            dd($mimeType);
-            $image = null;
 
-            if ($mimeType === 'image/svg+xml') {
-                // If the file is an SVG image, store it without conversion
-                $filename = Str::random(20);
-                $path = $this->slug . DIRECTORY_SEPARATOR . date('FY') . DIRECTORY_SEPARATOR;
-                $filePath = $path . $filename . '.' . $file->getClientOriginalExtension();
-//                Storage::disk(config('voyager.storage.disk'))->putFileAs($path, $file, $filePath, 'public');
-                Storage::disk(config('voyager.storage.disk'))->putFileAs("", $file, $filePath, 'public');
-                $filesPath[] = $filePath;
-            } else {
-                // For other image types, perform the usual image processing
+            $image = InterventionImage::make($file)->orientate();
 
-                $image = InterventionImage::make($file)->orientate();
-//            dd($image);
             $resize_width = null;
             $resize_height = null;
 
@@ -121,7 +107,6 @@ class MultipleImage extends BaseType
                         'public'
                     );
                 }
-            }
             }
         }
 

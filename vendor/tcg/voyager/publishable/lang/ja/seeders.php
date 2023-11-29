@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => '作成者',
-        'personal_picture'           => 'アバター',
+        'avatar'           => 'アバター',
         'body'             => '本文',
         'category'         => 'カテゴリー',
         'created_at'       => '作成日時',

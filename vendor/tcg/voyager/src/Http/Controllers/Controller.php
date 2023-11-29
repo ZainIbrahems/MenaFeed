@@ -57,7 +57,6 @@ abstract class Controller extends BaseController
                         : [];
 
         foreach ($rows as $row) {
-
             // if the field for this row is absent from the request, continue
             // checkboxes will be absent when unchecked, thus they are the exception
             if (!$request->hasFile($row->field) && !$request->has($row->field) && $row->type !== 'checkbox') {
@@ -78,7 +77,6 @@ abstract class Controller extends BaseController
             if ($row->type == 'relationship' && $row->details->type != 'belongsToMany') {
                 $row->field = @$row->details->column;
             }
-
 
             /*
              * merge ex_images/files and upload images/files

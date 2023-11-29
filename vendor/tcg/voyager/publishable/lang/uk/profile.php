@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'        => 'Фото',
+    'avatar'        => 'Фото',
     'edit'          => 'Налаштування профілю',
     'edit_user'     => 'Змінити профіль',
     'password'      => 'Пароль',

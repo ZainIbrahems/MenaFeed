@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'                 => 'الصورة الرمزية',
+    'avatar'                 => 'الصورة الرمزية',
     'edit'                   => 'تعديل',
     'edit_user'              => 'تعديل المستخدم',
     'password'               => 'كلمه السر',

@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => 'Συγγραφέας',
-        'personal_picture'           => 'Εικόνα προφίλ',
+        'avatar'           => 'Εικόνα προφίλ',
         'body'             => 'Σώμα κειμένου',
         'category'         => 'Κατηγορία',
         'created_at'       => 'Δημιουργήθηκε στις',

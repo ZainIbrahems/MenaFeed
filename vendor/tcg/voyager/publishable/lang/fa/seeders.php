@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => 'نویسنده',
-        'personal_picture'           => 'آواتار',
+        'avatar'           => 'آواتار',
         'body'             => 'بدنه',
         'category'         => 'دسته',
         'created_at'       => 'ایجاد شده در',

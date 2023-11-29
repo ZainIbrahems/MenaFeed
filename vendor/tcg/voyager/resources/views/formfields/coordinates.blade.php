@@ -29,7 +29,6 @@
                     <input
                         class="form-control"
                         type="text"
-                        name="address"
                         placeholder="742 Evergreen Terrace"
                         id="places-autocomplete"
                         v-on:keypress="onInputKeyPress($event)"
@@ -109,11 +108,11 @@
             mounted() {
                 // Load Google Maps script
                 let gMapScript = document.createElement('script');
-                gMapScript.setAttribute('src', 'https://maps.googleapis.com/maps/api/js?key=' + this.apiKey + '&callback=gMapVm.$refs.coordinates.initMap&libraries=places');
+                gMapScript.setAttribute('src', 'https://maps.googleapis.com/maps/api/js?key='+this.apiKey+'&callback=gMapVm.$refs.coordinates.initMap&libraries=places');
                 document.head.appendChild(gMapScript);
             },
             methods: {
-                initMap: function () {
+                initMap: function() {
                     var vm = this;
 
                     var center = vm.points[vm.points.length - 1];
@@ -145,29 +144,29 @@
                     }
                 },
 
-                setLatLng: function (lat, lng) {
+                setLatLng: function(lat, lng) {
                     this.lat = lat;
                     this.lng = lng;
                 },
 
-                moveMapAndMarker: function (lat, lng) {
+                moveMapAndMarker: function(lat, lng) {
                     this.marker.setPosition(new google.maps.LatLng(lat, lng));
                     this.map.panTo(new google.maps.LatLng(lat, lng));
                 },
 
-                onMapDrag: function (event) {
+                onMapDrag: function(event) {
                     this.setLatLng(event.latLng.lat(), event.latLng.lng());
 
                     this.onChange('mapDragged');
                 },
 
-                onInputKeyPress: function (event) {
+                onInputKeyPress: function(event) {
                     if (event.which === 13) {
                         event.preventDefault();
                     }
                 },
 
-                onPlaceChange: function () {
+                onPlaceChange: function() {
                     this.place = this.autocomplete.getPlace();
 
                     if (this.place.geometry) {
@@ -178,31 +177,31 @@
                     this.onChange('placeChanged');
                 },
 
-                onLatLngInputChange: function (event) {
+                onLatLngInputChange: function(event) {
                     this.moveMapAndMarker(this.lat, this.lng);
 
                     this.onChange('latLngChanged');
                 },
 
-                onChange: function (eventType) {
+                onChange: function(eventType) {
                     @if (property_exists($row->details, 'onChange'))
-                    if (this.onChangeDebounceTimeout) {
-                        clearTimeout(this.onChangeDebounceTimeout);
-                    }
+                        if (this.onChangeDebounceTimeout) {
+                            clearTimeout(this.onChangeDebounceTimeout);
+                        }
 
-                    self = this
-                    this.onChangeDebounceTimeout = setTimeout(function () {
-                        {{ $row->details->onChange }}(eventType, {
-                            lat: self.lat,
-                            lng: self.lng,
-                            place: self.place
-                        });
-                    }, 300);
+                        self = this
+                        this.onChangeDebounceTimeout = setTimeout(function() {
+                            {{ $row->details->onChange }}(eventType, {
+                                lat: self.lat,
+                                lng: self.lng,
+                                place: self.place
+                            });
+                        }, 300);
                     @endif
                 },
             }
         });
 
-        var gMapVm = new Vue({el: '#coordinates-formfield'});
+        var gMapVm = new Vue({ el: '#coordinates-formfield' });
     </script>
 @endpush

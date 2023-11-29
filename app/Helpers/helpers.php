@@ -8,7 +8,28 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use JetBrains\PhpStorm\ArrayShape;
 use TCG\Voyager\Models\Translation;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
+function uploadToGoogleStorage(UploadedFile $file, $folder = null, $filename = null)
+{
+    try {
+        $name = !is_null($filename) ? $filename : Str::random(25);
+
+        return $file->storeAs(
+            $folder,
+            $name . "." . $file->getClientOriginalExtension(),
+            'gcs'
+        );
+    } catch (\Exception $e) {
+        return '';
+    }
+}
+function getImageUrlFromBucket($bucket, $path)
+{
+    return "https://storage.googleapis.com/" . $bucket . "/" . $path;
+
+}
 function getFileURL($file)
 {
     if ($file != null) {
@@ -881,9 +902,12 @@ function getFeedReportUserName($id)
 //    return $video;
 //}
 
-function twopoints_on_earth($latitudeFrom, $longitudeFrom,
-                            $latitudeTo, $longitudeTo)
-{
+function twopoints_on_earth(
+    $latitudeFrom,
+    $longitudeFrom,
+    $latitudeTo,
+    $longitudeTo
+) {
     $long1 = deg2rad($longitudeFrom);
     $long2 = deg2rad($longitudeTo);
     $lat1 = deg2rad($latitudeFrom);
@@ -910,28 +934,34 @@ function getProviderNearBy($request)
     $longitude = $request->header('lat') ? $request->header('lng') : '55.2708';
     $distance = 100000000;
     $providers = \App\Models\Provider::select('providers.*')->distinct()->
-    join('providers_specialities', 'providers_specialities.provider_id', '=', 'providers.id')->
-    where('providers.status', 1);
+        join('providers_specialities', 'providers_specialities.provider_id', '=', 'providers.id')->
+        where('providers.status', 1);
 
-//    $providers = $providers->whereRaw(DB::raw("(6371 * acos( cos( radians($latitude) )
+    //    $providers = $providers->whereRaw(DB::raw("(6371 * acos( cos( radians($latitude) )
 //                     * cos( radians( ST_Y(location) ) )
 //                     * cos( radians( ST_X(location) ) - radians($longitude) )
 //                     + sin( radians($latitude) )
 //                     * sin( radians( ST_Y(location) ) ) ) ) < $distance "));
 
 
-    if ($request->has('sub_sub_category') &&
+    if (
+        $request->has('sub_sub_category') &&
         is_numeric($request->get('sub_sub_category')) &&
-        $request->get('sub_sub_category') > 0) {
+        $request->get('sub_sub_category') > 0
+    ) {
         $providers = $providers->whereIn('providers_specialities.platform_sub_sub_category_id', [$request->get('sub_sub_category')]);
-    } elseif ($request->has('sub_category') &&
+    } elseif (
+        $request->has('sub_category') &&
         is_numeric($request->get('sub_category')) &&
-        $request->get('sub_category') > 0) {
+        $request->get('sub_category') > 0
+    ) {
         $providers_id = \App\Models\ProviderSpecialityGroup::where('platform_sub_category_id', $request->get('sub_category'))->pluck('provider_id');
         $providers = $providers->whereIn('providers.id', $providers_id);
-    } elseif ($request->has('category') &&
+    } elseif (
+        $request->has('category') &&
         is_numeric($request->get('category')) &&
-        $request->get('category') > 0) {
+        $request->get('category') > 0
+    ) {
         $providers = $providers->whereIn('platform_category', [$request->get('category')]);
     }
 
@@ -947,8 +977,8 @@ function getProviderNearByHomeSection($request, $home_section)
     $longitude = $request->header('lat') ? $request->header('lng') : '55.2708';
     $distance = 100;
     $providers = \App\Models\Provider::select('providers.*')->distinct()->
-    join('providers_specialities', 'providers_specialities.provider_id', '=', 'providers.id')->
-    where('providers.status', 1);
+        join('providers_specialities', 'providers_specialities.provider_id', '=', 'providers.id')->
+        where('providers.status', 1);
 
     $category = \App\Models\PlatformCategoryHomeSection::where('home_section_id', $home_section->id)->pluck('platform_category_id');
 
@@ -972,20 +1002,20 @@ function getProviderNearByLiveStream($request)
     $longitude = $request->header('lat') ? $request->header('lng') : '55.2708';
     $distance = 100;
     $providers = \App\Models\Provider::select('providers.*', 'lives.id', 'lives.code')->distinct()->
-    join('lives', 'lives.added_by', '=', 'providers.id')->
-    where('lives.status', 1)->
-    where('providers.status', 1);
+        join('lives', 'lives.added_by', '=', 'providers.id')->
+        where('lives.status', 1)->
+        where('providers.status', 1);
 
-//    $lives = \App\Models\Livestream::orderBy('created_at','desc')->pluck('added_by');
+    //    $lives = \App\Models\Livestream::orderBy('created_at','desc')->pluck('added_by');
 
     $providers = $providers->
-    whereRaw(DB::raw("(6371 * acos( cos( radians($latitude) )
+        whereRaw(DB::raw("(6371 * acos( cos( radians($latitude) )
                      * cos( radians( ST_Y(location) ) )
                      * cos( radians( ST_X(location) ) - radians($longitude) )
                      + sin( radians($latitude) )
                      * sin( radians( ST_Y(location) ) ) ) ) < $distance "));
 
-//    $providers = $providers->where('lives.status', 'on_live');
+    //    $providers = $providers->where('lives.status', 'on_live');
 //    $providers = $providers->whereIn('providers.id', $lives);
 
     $providers = $providers->take(10)->orderBy('lives.id', 'desc')->get();
@@ -1010,7 +1040,7 @@ function getUserType()
 {
 
     return auth('sanctum')->user()->type_str;
-//    $from_type = 'client';
+    //    $from_type = 'client';
 //    if (auth('sanctum')->user()->registration_number) {
 //        $from_type = 'provider';
 //    }
@@ -1044,12 +1074,12 @@ function checkSlots($days, $time_from, $time_to, $provider_id)
     foreach ($days as $d) {
         foreach ($time_from as $key => $tf) {
             $slot = \App\Models\AppointmentSlot::
-            join('appointment_slots_days', 'appointment_slots_days.slot_id', '=', 'appointment_slots.id')->
-            join('appointment_slots_times', 'appointment_slots_times.slot_id', '=', 'appointment_slots.id')->
-            where('appointment_slots_days.day', '=', $d)->
-            whereTime('appointment_slots_times.from_time', '>=', $tf)->
-            whereTime('appointment_slots_times.to_time', '<=', $time_to[$key])->
-            where('appointment_slots.provider_id', '=', $provider_id)->first();
+                join('appointment_slots_days', 'appointment_slots_days.slot_id', '=', 'appointment_slots.id')->
+                join('appointment_slots_times', 'appointment_slots_times.slot_id', '=', 'appointment_slots.id')->
+                where('appointment_slots_days.day', '=', $d)->
+                whereTime('appointment_slots_times.from_time', '>=', $tf)->
+                whereTime('appointment_slots_times.to_time', '<=', $time_to[$key])->
+                where('appointment_slots.provider_id', '=', $provider_id)->first();
             if ($slot) {
                 return [
                     'status' => false,
@@ -1093,7 +1123,7 @@ function getSlots($data)
             foreach ($half_times as $ht) {
                 $times_response[$key][] = [
                     'slot_id' => $slot->id,
-                    'fees' => (double)$slot->fees,
+                    'fees' => (double) $slot->fees,
                     'time' => $ht
                 ];
             }
@@ -1101,7 +1131,7 @@ function getSlots($data)
     }
 
 
-//    $t = explode(' ', Carbon::parse($d->date_time)->toDateTimeString());
+    //    $t = explode(' ', Carbon::parse($d->date_time)->toDateTimeString());
 //    if (sizeof($t) >= 2) {
 //        $times[Carbon::parse($t[0])->toDateTimeLocalString()][] = \App\Resources\AppointmentSlot::make($d);
 //    }
@@ -1157,9 +1187,9 @@ function getMessagesByToID($to_id, $to_type, $from_id, $from_type, $limit = 0, $
     $data = $data->orderBy('updated_at', 'desc')->paginate($limit, ['*'], 'page', $offset);
     $data = [
         'total_size' => $data->total(),
-        'limit' => (int)$limit,
-        'offset' => (int)$offset,
-        'chat_id' => (int)$chat_id,
+        'limit' => (int) $limit,
+        'offset' => (int) $offset,
+        'chat_id' => (int) $chat_id,
         'data' => \App\Resources\Message::collection($data->all())
     ];
     return $data;
@@ -1185,9 +1215,9 @@ function getMessagesByChatID($chat_id, $limit = 0, $offset = 0)
     $data = $data->orderBy('updated_at', 'desc')->paginate($limit, ['*'], 'page', $offset);
     $data = [
         'total_size' => $data->total(),
-        'limit' => (int)$limit,
-        'offset' => (int)$offset,
-        'chat_id' => (int)$chat_id,
+        'limit' => (int) $limit,
+        'offset' => (int) $offset,
+        'chat_id' => (int) $chat_id,
         'data' => \App\Resources\Message::collection($data->all())
     ];
     return $data;
@@ -1216,8 +1246,10 @@ function isModerator($q)
     if (auth('web')->check()) {
         $role = auth('web')->user()->role_id;
         $provider = Provider::where('user_id', auth('web')->user()->id)->first();
-        if ($role == getRoleID('admin') || $role == getRoleID('nm-admin') ||
-            $role == getRoleID('super-admin') || ($provider && $q->added_by == $provider->id)) {
+        if (
+            $role == getRoleID('admin') || $role == getRoleID('nm-admin') ||
+            $role == getRoleID('super-admin') || ($provider && $q->added_by == $provider->id)
+        ) {
             return true;
         }
     }
@@ -1255,7 +1287,7 @@ function addBlogView($blog)
 function clearPhone($phone)
 {
     $phone = preg_replace('/[^0-9.]+/', '', $phone);
-    $phone = (int)$phone;
+    $phone = (int) $phone;
     return $phone;
 }
 

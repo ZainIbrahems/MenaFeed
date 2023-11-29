@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => 'Autore',
-        'personal_picture'           => 'Avatar',
+        'avatar'           => 'Avatar',
         'body'             => 'Body',
         'category'         => 'Categoria',
         'created_at'       => 'Creato il',

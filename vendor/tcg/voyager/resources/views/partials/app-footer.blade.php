@@ -1,18 +1,13 @@
 <footer class="app-footer">
     <div class="site-footer-right">
-        {{--@php $version = Voyager::getVersion(); @endphp--}}
-        {{--@if (!empty($version))--}}
-        {{--- {{ $version }}--}}
-        {{--@endif--}}
-        <label>Developed by <a target="_blank" href="https://www.instagram.com/nimer__alkhatib"><b>Nimer ALkhatib</b></a></label>
-        @if(!\Session::has('lang') || \Session::get('lang')=='ar')
-            <a style="margin: 0 10px;padding: 0;" href="{{route('change-lang')}}/en">
-                <img src="{{asset('flags')}}/en.png" width="25px">
-            </a>
+        @if (rand(1,100) == 100)
+            <i class="voyager-rum-1"></i> {{ __('voyager::theme.footer_copyright2') }}
         @else
-            <a style="margin: 0 10px;padding: 0;" href="{{route('change-lang')}}/ar">
-                <img src="{{asset('flags')}}/ar.png" width="25px">
-            </a>
+            {!! __('voyager::theme.footer_copyright') !!} <a href="http://thecontrolgroup.com" target="_blank">The Control Group</a>
+        @endif
+        @php $version = Voyager::getVersion(); @endphp
+        @if (!empty($version))
+            - {{ $version }}
         @endif
     </div>
 </footer>

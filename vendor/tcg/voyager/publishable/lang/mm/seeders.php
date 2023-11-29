@@ -3,7 +3,7 @@
 return [
     'data_rows' => [
         'author' => 'စာရေးသူ',
-        'personal_picture' => 'ကိုယ်ပွား',
+        'avatar' => 'ကိုယ်ပွား',
         'body' => 'စာသား',
         'category' => 'အမျိုးအစား',
         'created_at' => 'ဖန်တီးသည့်ရက်စွဲနှင့်အချိန်',

@@ -3,7 +3,7 @@
 return [
     'data_rows' => [
         'author'           => 'Författare',
-        'personal_picture'           => 'Avatar',
+        'avatar'           => 'Avatar',
         'body'             => 'Brödtext',
         'category'         => 'Kategori',
         'created_at'       => 'Skapad',

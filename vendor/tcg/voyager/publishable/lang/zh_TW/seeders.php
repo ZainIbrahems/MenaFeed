@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => '作者',
-        'personal_picture'           => '頭像',
+        'avatar'           => '頭像',
         'body'             => '主體內容',
         'category'         => '分類目錄',
         'created_at'       => '創建於',

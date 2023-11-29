@@ -35,53 +35,35 @@
         .remember-me-text{
             padding:0 5px;
         }
-        .login-button, .bar:before, .bar:after{
-            background: #0074c7;
-        }
     </style>
-{{--    <style>--}}
-{{--        @font-face {--}}
-{{--            font-family: myFirstFont;--}}
-{{--            src: url('{{asset('Crimson/CrimsonPro-VariableFont_wght.ttf')}}');--}}
-{{--        }--}}
-
-{{--        div,p,input,select,textarea,a,h1,h2,h3,h4,h5,h6,span,label,.btn {--}}
-{{--            font-family: myFirstFont !important;--}}
-{{--        }--}}
-{{--    </style>--}}
+    
     @yield('pre_css')
-{{--    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">--}}
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 </head>
-<body class="login" style="background-image: none;background: none;">
+<body class="login">
 <div class="container-fluid">
     <div class="row">
-{{--        <div class="faded-bg animated"></div>--}}
-        <div   style="
-            background-image: url({{Voyager::image(Voyager::setting('admin.bg_image', '')) }});
-            background-color: #FFFFFF;
-            height: 100vh;
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            background-position: center;" class="hidden-xs col-sm-7 col-md-7">
+        <div class="faded-bg animated"></div>
+        <div class="hidden-xs col-sm-7 col-md-8">
             <div class="clearfix">
                 <div class="col-sm-12 col-md-10 col-md-offset-2">
                     <div class="logo-title-container">
-{{--                        <?php $admin_logo_img = Voyager::setting('admin.icon_image', ''); ?>--}}
-{{--                        @if($admin_logo_img == '')--}}
-{{--                            <img class="img-responsive pull-left flip logo hidden-xs animated fadeIn" src="{{ voyager_asset('images/logo-icon-light.png') }}" alt="Logo Icon">--}}
-{{--                        @else--}}
-{{--                            <img class="img-responsive pull-left flip logo hidden-xs animated fadeIn" src="{{ Voyager::image($admin_logo_img) }}" alt="Logo Icon">--}}
-{{--                        @endif--}}
-{{--                        <div class="copy animated fadeIn">--}}
-{{--                            <h1>{{ Voyager::setting('admin.title', 'Voyager') }}</h1>--}}
-{{--                            <p>{{ Voyager::setting('admin.description', __('voyager::login.welcome')) }}</p>--}}
-{{--                        </div>--}}
+                        <?php $admin_logo_img = Voyager::setting('admin.icon_image', ''); ?>
+                        @if($admin_logo_img == '')
+                            <img class="img-responsive pull-left flip logo hidden-xs animated fadeIn" src="{{ voyager_asset('images/logo-icon-light.png') }}" alt="Logo Icon">
+                        @else
+                            <img class="img-responsive pull-left flip logo hidden-xs animated fadeIn" src="{{ Voyager::image($admin_logo_img) }}" alt="Logo Icon">
+                        @endif
+                        <div class="copy animated fadeIn">
+                            <h1>{{ Voyager::setting('admin.title', 'Voyager') }}</h1>
+                            <p>{{ Voyager::setting('admin.description', __('voyager::login.welcome')) }}</p>
+                        </div>
                     </div> <!-- .logo-title-container -->
                 </div>
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-5 col-md-5 login-sidebar">
+        <div class="col-xs-12 col-sm-5 col-md-4 login-sidebar">
 
            @yield('content')
 

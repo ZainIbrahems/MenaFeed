@@ -1,4 +1,3 @@
-
 @if(isset($options->model) && isset($options->type))
 
     @if(class_exists($options->model))
@@ -23,52 +22,28 @@
 
             @else
 
-{{--                @if($options->column=='card_id')--}}
-{{--                    @php--}}
-{{--                        $query = \App\Models\Card::get();--}}
-{{--                    @endphp--}}
-{{--                    <ul class="radio card_radio" >--}}
-{{--                    @foreach($query as $relationshipData)--}}
-{{--                        <li--}}
-{{--                            style="border: none;margin: 0 0 70px 0">--}}
-{{--                            <input type="radio"--}}
-{{--                                   id="option-card_id-{{ \Illuminate\Support\Str::slug($relationshipData->{$options->key}, '-') }}"--}}
-{{--                                   name="card_id"--}}
-{{--                                   value="{{ $relationshipData->{$options->key} }}"--}}
-{{--                                   @if(old($options->column, $dataTypeContent->{$options->column}) == $relationshipData->{$options->key}) checked @endif>--}}
-{{--                            <label--}}
-{{--                                for="option-card_id-{{ \Illuminate\Support\Str::slug($relationshipData->{$options->key}, '-') }}">--}}
-{{--                                <img src="{{ Voyager::image($relationshipData->{'image'}) }}" width="150px;">--}}
-{{--                            </label>--}}
-{{--                            <div class="check"></div>--}}
-{{--                        </li>--}}
-{{--                    @endforeach--}}
-{{--                    </ul>--}}
-{{--                @else--}}
-                    <select
-                        class="form-control select2-ajax" name="{{ $options->column }}"
-                        data-get-items-route="{{route('voyager.' . $dataType->slug.'.relation')}}"
-                        data-get-items-field="{{$row->field}}"
-                        @if(!is_null($dataTypeContent->getKey())) data-id="{{$dataTypeContent->getKey()}}" @endif
-                        data-method="{{ !is_null($dataTypeContent->getKey()) ? 'edit' : 'add' }}"
-                        @if($row->required == 1) required @endif
-                    >
-                        @php
-                            $model = app($options->model);
-                            $query = $model::where($options->key, old($options->column, $dataTypeContent->{$options->column}))->get();
-                        @endphp
+                <select
+                    class="form-control select2-ajax" name="{{ $options->column }}"
+                    data-get-items-route="{{route('voyager.' . $dataType->slug.'.relation')}}"
+                    data-get-items-field="{{$row->field}}"
+                    @if(!is_null($dataTypeContent->getKey())) data-id="{{$dataTypeContent->getKey()}}" @endif
+                    data-method="{{ !is_null($dataTypeContent->getKey()) ? 'edit' : 'add' }}"
+                    @if($row->required == 1) required @endif
+                >
+                    @php
+                        $model = app($options->model);
+                        $query = $model::where($options->key, old($options->column, $dataTypeContent->{$options->column}))->get();
+                    @endphp
 
-                        @if(!$row->required)
-                            <option value="">{{__('voyager::generic.none')}}</option>
-                        @endif
+                    @if(!$row->required)
+                        <option value="">{{__('voyager::generic.none')}}</option>
+                    @endif
 
-                        @foreach($query as $relationshipData)
-                            <option value="{{ $relationshipData->{$options->key} }}"
-{{--                                    @if((request()->has($options->column)&&request()->get($options->column)==$relationshipData->{$options->key})) selected="selected" @endif--}}
-                                    @if(old($options->column, $dataTypeContent->{$options->column}) == $relationshipData->{$options->key}) selected="selected" @endif>{{ $relationshipData->{$options->label} }}</option>
-                        @endforeach
-                    </select>
-{{--                @endif--}}
+                    @foreach($query as $relationshipData)
+                        <option value="{{ $relationshipData->{$options->key} }}" @if(old($options->column, $dataTypeContent->{$options->column}) == $relationshipData->{$options->key}) selected="selected" @endif>{{ $relationshipData->{$options->label} }}</option>
+                    @endforeach
+                </select>
+
             @endif
 
         @elseif($options->type == 'hasOne')
@@ -184,37 +159,37 @@
                     @if(!is_null($dataTypeContent->getKey())) data-id="{{$dataTypeContent->getKey()}}" @endif
                     data-method="{{ !is_null($dataTypeContent->getKey()) ? 'edit' : 'add' }}"
                     @if(isset($options->taggable) && $options->taggable === 'on')
-                    data-route="{{ route('voyager.'.\Illuminate\Support\Str::slug($options->table).'.store') }}"
-                    data-label="{{$options->label}}"
-                    data-error-message="{{__('voyager::bread.error_tagging')}}"
+                        data-route="{{ route('voyager.'.\Illuminate\Support\Str::slug($options->table).'.store') }}"
+                        data-label="{{$options->label}}"
+                        data-error-message="{{__('voyager::bread.error_tagging')}}"
                     @endif
                     @if($row->required == 1) required @endif
                 >
 
-                    @php
-                        $selected_keys = [];
+                        @php
+                            $selected_keys = [];
+                            
+                            if (!is_null($dataTypeContent->getKey())) {
+                                $selected_keys = $dataTypeContent->belongsToMany(
+                                    $options->model,
+                                    $options->pivot_table,
+                                    $options->foreign_pivot_key ?? null,
+                                    $options->related_pivot_key ?? null,
+                                    $options->parent_key ?? null,
+                                    $options->key
+                                )->pluck($options->table.'.'.$options->key);
+                            }
+                            $selected_keys = old($relationshipField, $selected_keys);
+                            $selected_values = app($options->model)->whereIn($options->key, $selected_keys)->pluck($options->label, $options->key);
+                        @endphp
 
-                        if (!is_null($dataTypeContent->getKey())) {
-                            $selected_keys = $dataTypeContent->belongsToMany(
-                                $options->model,
-                                $options->pivot_table,
-                                $options->foreign_pivot_key ?? null,
-                                $options->related_pivot_key ?? null,
-                                $options->parent_key ?? null,
-                                $options->key
-                            )->pluck($options->table.'.'.$options->key);
-                        }
-                        $selected_keys = old($relationshipField, $selected_keys);
-                        $selected_values = app($options->model)->whereIn($options->key, $selected_keys)->pluck($options->label, $options->key);
-                    @endphp
+                        @if(!$row->required)
+                            <option value="">{{__('voyager::generic.none')}}</option>
+                        @endif
 
-                    @if(!$row->required)
-                        <option value="">{{__('voyager::generic.none')}}</option>
-                    @endif
-
-                    @foreach ($selected_values as $key => $value)
-                        <option value="{{ $key }}" selected="selected">{{ $value }} </option>
-                    @endforeach
+                        @foreach ($selected_values as $key => $value)
+                            <option value="{{ $key }}" selected="selected">{{ $value }}</option>
+                        @endforeach
 
                 </select>
 

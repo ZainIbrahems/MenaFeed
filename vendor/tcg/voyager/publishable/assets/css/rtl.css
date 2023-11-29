@@ -166,7 +166,7 @@
     left: 10px;
 }
 
-[dir="rtl"] .app-container .side-menu .panel.widget .personal_picture {
+[dir="rtl"] .app-container .side-menu .panel.widget .avatar {
     float: right;
     margin-left: 0px;
     margin-right: 10px;

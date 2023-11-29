@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'           => 'ئاڤاتار',
+    'avatar'           => 'ئاڤاتار',
     'edit'             => 'دەستکاری پڕۆفایلەکەم',
     'edit_user'        => 'دەستکاری بەکارهێنەر',
     'password'         => 'ووشەی ن‌ینی',

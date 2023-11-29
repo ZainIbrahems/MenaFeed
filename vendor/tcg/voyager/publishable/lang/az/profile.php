@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'           => 'Foto',
+    'avatar'           => 'Foto',
     'edit'             => 'Profil ayarları',
     'edit_user'        => 'Profili dəyiş',
     'password'         => 'Şifrə',

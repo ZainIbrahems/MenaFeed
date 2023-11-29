@@ -13,7 +13,7 @@ return [
     'user' => [
         'add_default_role_on_register' => true,
         'default_role'                 => 'user',
-        'default_personal_picture'               => 'users/default.png',
+        'default_avatar'               => 'users/default.png',
         'redirect'                     => '/admin',
     ],
 
@@ -80,7 +80,7 @@ return [
 
     'database' => [
         'tables' => [
-            'hidden' => ['migrations', 'data_rows', 'data_types', 'menu_items', 'password_resets', 'permission_role', 'settings'],
+            'hidden' => ['migrations', 'data_rows', 'data_types', 'menu_items', 'password_resets', 'permission_role', 'personal_access_tokens', 'settings'],
         ],
         'autoload_migrations' => true,
     ],

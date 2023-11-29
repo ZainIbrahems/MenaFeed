@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'           => '头像',
+    'avatar'           => '头像',
     'edit'             => '更改个人资料',
     'edit_user'        => '编辑用户',
     'password'         => '密码',

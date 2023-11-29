@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'        => 'Profiilikuva',
+    'avatar'        => 'Profiilikuva',
     'edit'          => 'Muokkaa profiiliani',
     'edit_user'     => 'Muokkaa käyttäjää',
     'password'      => 'Salasana',

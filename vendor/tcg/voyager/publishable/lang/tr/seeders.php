@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => 'Yazar',
-        'personal_picture'           => 'Avatar',
+        'avatar'           => 'Avatar',
         'body'             => 'Gövde',
         'category'         => 'Kategori',
         'created_at'       => 'Oluşturulma Zamanı',

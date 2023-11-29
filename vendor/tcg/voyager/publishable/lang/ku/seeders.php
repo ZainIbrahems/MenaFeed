@@ -3,7 +3,7 @@
 return [
     'data_rows'  => [
         'author'           => 'نووسەر',
-        'personal_picture'           => 'ئاڤاتار',
+        'avatar'           => 'ئاڤاتار',
         'body'             => 'ناوەڕۆک',
         'category'         => 'بەش',
         'created_at'       => 'دروستکراوە لە',

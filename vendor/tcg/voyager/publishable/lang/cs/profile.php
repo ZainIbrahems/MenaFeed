@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'personal_picture'        => 'Avatar',
+    'avatar'        => 'Avatar',
     'edit'          => 'Upravit profil',
     'edit_user'     => 'Upravit uživatele',
     'password'      => 'Heslo',

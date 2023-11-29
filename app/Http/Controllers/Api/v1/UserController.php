@@ -23,9 +23,29 @@ use Illuminate\Support\Facades\Validator;
 use Mail;
 use Notification;
 use Storage;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+
+    public function uploadFile(UploadedFile $file, $folder = null, $filename = null)
+    {
+        $name = !is_null($filename) ? $filename : Str::random(25);
+
+        return $file->storeAs(
+            $folder,
+            $name . "." . $file->getClientOriginalExtension(),
+            'gcs'
+        );
+    }
+
+    public function uploads(Request $request)
+    {
+        $link = $request->hasFile('file') ? $this->uploadFile($request->file('file'), 'Categories') : null;
+        dd($link);
+    }
+
     public function forgetPassword(Request $request)
     {
 
@@ -39,15 +59,15 @@ class UserController extends Controller
 
 
 
-            $user = Provider::
+        $user = Provider::
             where('phone', $request->phone)->
             orWhere('user_name', $request->phone)->
             orWhere('email', $request->phone)->
             first();
 
-            if (!$user) {
-                return parent::sendError([['message' => trans('messages.incorrect phone')]], 403);
-            }
+        if (!$user) {
+            return parent::sendError([['message' => trans('messages.incorrect phone')]], 403);
+        }
 
 
         PasswordReset::where([
@@ -62,11 +82,11 @@ class UserController extends Controller
         $pr->save();
 
         try {
-            Mail::send('emails.password-reset', ['token' => $token,'user'=>$user], function($message) use($user) {
+            Mail::send('emails.password-reset', ['token' => $token, 'user' => $user], function ($message) use ($user) {
                 $message->to($user->email, 'Mena')->subject
-                   ('Password Reset Code');
-                $message->from('security@menaai.ae','Mena');
-             });
+                ('Password Reset Code');
+                $message->from('security@menaai.ae', 'Mena');
+            });
             // Mail::to($user->email)->send(new \App\Mail\PasswordResetMail($token));
         } catch (\Exception $ex) {
             return $ex;
@@ -75,7 +95,8 @@ class UserController extends Controller
         return parent::sendSuccess(trans('messages.Check your phone!'), null);
 
     }
-    public function forgetVerifyCode(Request $request){
+    public function forgetVerifyCode(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string',
             'code' => 'required|string',
@@ -108,10 +129,10 @@ class UserController extends Controller
 
 
         $user = Provider::
-        where('phone', $request->email)->
-        orWhere('user_name', $request->email)->
-        orWhere('email', $request->email)->
-        first();
+            where('phone', $request->email)->
+            orWhere('user_name', $request->email)->
+            orWhere('email', $request->email)->
+            first();
 
         if (!$user) {
             return parent::sendError([['message' => trans('messages.incorrect phone')]], 403);
@@ -128,24 +149,24 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
             $user->update();
             try {
-                Mail::send('emails.password-confirmation', ['user'=>$user], function($message) use($user) {
+                Mail::send('emails.password-confirmation', ['user' => $user], function ($message) use ($user) {
                     $message->to($user->email, 'Mena')->subject
-                       ('Password Reset Confirmation');
-                    $message->from('no-reply@menaai.ae','Mena');
-                 });
+                    ('Password Reset Confirmation');
+                    $message->from('no-reply@menaai.ae', 'Mena');
+                });
                 // Mail::to($user->email)->send(new \App\Mail\PasswordResetMail($token));
             } catch (\Exception $ex) {
                 return $ex;
             }
 
             return parent::sendSuccess(trans('messages.Password Reset Successfully!'), null);
-        }
-        else{
+        } else {
             return parent::sendError([['message' => trans('messages.Error in the token sent')]], 403);
         }
     }
 
-    public function checkUserName(Request $request){
+    public function checkUserName(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'user_name' => 'required|string',
         ]);
@@ -154,27 +175,27 @@ class UserController extends Controller
             return parent::sendError(parent::error_processor($validator), 403);
         }
 
-        $user = Provider::where('user_name',$request->user_name)->first();
+        $user = Provider::where('user_name', $request->user_name)->first();
 
-        if($user){
+        if ($user) {
             $usernames = [];
-            for($i = 0 ; $i < 5 ; $i++){
+            for ($i = 0; $i < 5; $i++) {
                 $newUsername = $this->checkNameExistance($request->user_name);
 
-                array_push($usernames,$newUsername);
+                array_push($usernames, $newUsername);
             }
-            return parent::sendSuccess("User Name Is Not Available!",['usernmames' => $usernames],205);
-        }
-        else{
+            return parent::sendSuccess("User Name Is Not Available!", ['usernmames' => $usernames], 205);
+        } else {
 
-            return parent::sendSuccess("User Name Is Available!",['usernmames' => []]);
+            return parent::sendSuccess("User Name Is Available!", ['usernmames' => []]);
         }
 
     }
-    public function checkNameExistance($originalname){
-        $newUsername = $originalname.rand(10, 99);
-        $user = Provider::where('user_name',$newUsername)->first();
-        if($user){
+    public function checkNameExistance($originalname)
+    {
+        $newUsername = $originalname . rand(10, 99);
+        $user = Provider::where('user_name', $newUsername)->first();
+        if ($user) {
             $this->checkNameExistance($originalname);
         }
 
@@ -183,28 +204,29 @@ class UserController extends Controller
     public function info(Request $request)
     {
 
-            $user = Provider::
+        $user = Provider::
             orWhere('email', auth('sanctum')->user()->email)->
             first();
-            if($user){
+        if ($user) {
 
-                        $user = \App\Resources\ProviderBref::make($user);
+            $user = \App\Resources\ProviderBref::make($user);
 
-                        $fields = \App\Resources\PlatformUserInput::collection(PlatformUserInput::where('platform_id',
-                        auth('sanctum')->user()->platform_id)->
-                        whereIn('spciality_id', ProviderSpeciality::where('provider_id', $user->id)->pluck('platform_sub_sub_category_id'))->get());
-                    $data_completed = checkUserDataCompleted($fields, $user);
+            $fields = \App\Resources\PlatformUserInput::collection(PlatformUserInput::where(
+                'platform_id',
+                auth('sanctum')->user()->platform_id
+            )->
+                whereIn('spciality_id', ProviderSpeciality::where('provider_id', $user->id)->pluck('platform_sub_sub_category_id'))->get());
+            $data_completed = checkUserDataCompleted($fields, $user);
 
-                return parent::sendSuccess(trans('messages.Data Got!'), [
-                    'user' => $user,
-                    'platform_fields' => $fields,
-                    'data_percent' => checkUserDataCompletedPercent($fields, $user),
-                    'data_completed' => $data_completed
-                ]);
-            }
-            else{
-                return parent::sendError('The user is not In our records', 403);
-            }
+            return parent::sendSuccess(trans('messages.Data Got!'), [
+                'user' => $user,
+                'platform_fields' => $fields,
+                'data_percent' => checkUserDataCompletedPercent($fields, $user),
+                'data_completed' => $data_completed
+            ]);
+        } else {
+            return parent::sendError('The user is not In our records', 403);
+        }
     }
 
 
@@ -242,7 +264,7 @@ class UserController extends Controller
         if ($phone_verify) {
             $phone_verify->delete();
 
-                $user = Provider::
+            $user = Provider::
                 where('phone', $request->email)->
                 orWhere('user_name', $request->email)->
                 orWhere('email', $request->email)->
@@ -253,10 +275,10 @@ class UserController extends Controller
                 $user->phone_verified = 1;
                 $user->update();
                 $email = $user->email;
-                Mail::send('emails.EmailConfirm', ['user'=>$user], function($message) use($email,$user) {
+                Mail::send('emails.EmailConfirm', ['user' => $user], function ($message) use ($email, $user) {
                     $message->to($email, 'Mena')->subject
-                        ('Welcome Email');
-                    $message->from('no-reply@menaai.ae','Mena');
+                    ('Welcome Email');
+                    $message->from('no-reply@menaai.ae', 'Mena');
                 });
             }
             return parent::sendSuccess(trans('messages.Correct Code!'), null);
@@ -284,8 +306,8 @@ class UserController extends Controller
         }
 
         $user_type = 'user_type';
-            // ($request->has('user_type') && strlen($request->has('user_type')) > 0) ?
-            //     $request->get('user_type') : 'client';
+        // ($request->has('user_type') && strlen($request->has('user_type')) > 0) ?
+        //     $request->get('user_type') : 'client';
 
         if ($user_type == 'client') {
             $validator = Validator::make($request->all(), [
@@ -371,10 +393,10 @@ class UserController extends Controller
             $user = Provider::where('id', $user->id)->first();
 
             // $this->sendSMSCode($request->phone);
-            $this->sendCodes($request->email,$user);
+            $this->sendCodes($request->email, $user);
 
             $fields = \App\Resources\PlatformUserInput::collection(PlatformUserInput::where('platform_id', $user->platform_id)->
-            whereIn('spciality_id', ProviderSpeciality::where('provider_id', $user->id)->pluck('platform_sub_sub_category_id'))->get());
+                whereIn('spciality_id', ProviderSpeciality::where('provider_id', $user->id)->pluck('platform_sub_sub_category_id'))->get());
 
             $user = \App\Resources\ProviderBref::make($user);
             $data_completed = checkUserDataCompleted($fields, $user);
@@ -390,18 +412,19 @@ class UserController extends Controller
         ]);
     }
 
-    public function sendCodes($email,$user = null){
+    public function sendCodes($email, $user = null)
+    {
         $code = generateRandomCode();
         $phone_code = new PhoneCodeVerify();
         $phone_code->phone = $email;
         $phone_code->code = $code;
         $phone_code->save();
 
-        if($user){
-            Mail::send('emails.EmailVerify', ['token' => $code,'user'=>$user], function($message) use($email,$user) {
+        if ($user) {
+            Mail::send('emails.EmailVerify', ['token' => $code, 'user' => $user], function ($message) use ($email, $user) {
                 $message->to($email, 'Mena')->subject
                 ('Verify your email address');
-                $message->from('security@menaai.ae','Mena');
+                $message->from('security@menaai.ae', 'Mena');
             });
         }
 
@@ -422,8 +445,8 @@ class UserController extends Controller
         $platform_id = auth('sanctum')->user()->platform_id;
 
         $fields = PlatformUserInput::where('platform_id', $platform_id)->
-        whereIn('spciality_id', ProviderSpeciality::where('provider_id', auth('sanctum')->user()->id)->
-        pluck('platform_sub_sub_category_id'))->get();
+            whereIn('spciality_id', ProviderSpeciality::where('provider_id', auth('sanctum')->user()->id)->
+                pluck('platform_sub_sub_category_id'))->get();
 
         $input = $request->all();
 
@@ -564,10 +587,10 @@ class UserController extends Controller
 
 
         $user = Provider::
-        where('phone', $request->email)->
-        orWhere('user_name', $request->email)->
-        orWhere('email', $request->email)->
-        first();
+            where('phone', $request->email)->
+            orWhere('user_name', $request->email)->
+            orWhere('email', $request->email)->
+            first();
         $user_type = 'provider';
 
         if (!$user || ($user && !Hash::check($request->password, $user->password))) {
@@ -586,7 +609,7 @@ class UserController extends Controller
             $user = \App\Resources\ProviderBref::make($user);
 
             $fields = \App\Resources\PlatformUserInput::collection(PlatformUserInput::where('platform_id', $user->platform_id)->
-            whereIn('spciality_id', ProviderSpeciality::where('provider_id', $user->id)->pluck('platform_sub_sub_category_id'))->get());
+                whereIn('spciality_id', ProviderSpeciality::where('provider_id', $user->id)->pluck('platform_sub_sub_category_id'))->get());
             $data_completed = checkUserDataCompleted($fields, $user);
         }
 
@@ -616,11 +639,13 @@ class UserController extends Controller
 
     public function counters(Request $request)
     {
-        return parent::sendSuccess(trans('messages.User logged out'),
+        return parent::sendSuccess(
+            trans('messages.User logged out'),
             [
-                'notifications' => \App\Models\Notification::where('notifiable_id',auth('sanctum')->user()->id)->where('read_at',NULL)->count(),
-                'messages' => \App\Models\Message::where('to_id',auth('sanctum')->user()->id)->where('read_at',NULL)->count(),
-            ]);
+                'notifications' => \App\Models\Notification::where('notifiable_id', auth('sanctum')->user()->id)->where('read_at', NULL)->count(),
+                'messages' => \App\Models\Message::where('to_id', auth('sanctum')->user()->id)->where('read_at', NULL)->count(),
+            ]
+        );
     }
 
     public function test(Request $request)
@@ -690,8 +715,8 @@ class UserController extends Controller
 
         $data = [
             'total_size' => $total_size,
-            'limit' => (int)$limit,
-            'offset' => (int)$offset,
+            'limit' => (int) $limit,
+            'offset' => (int) $offset,
             'data' => $users_data
         ];
 

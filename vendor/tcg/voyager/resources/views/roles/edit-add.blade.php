@@ -26,11 +26,11 @@
                           method="POST" enctype="multipart/form-data">
 
                         <!-- PUT Method if we are editing -->
-                    @if(isset($dataTypeContent->id))
-                        {{ method_field("PUT") }}
-                    @endif
+                        @if(isset($dataTypeContent->id))
+                            {{ method_field("PUT") }}
+                        @endif
 
-                    <!-- CSRF TOKEN -->
+                        <!-- CSRF TOKEN -->
                         {{ csrf_field() }}
 
                         <div class="panel-body">
@@ -48,42 +48,31 @@
                             @foreach($dataType->addRows as $row)
                                 <div class="form-group">
                                     <label for="name">{{ $row->getTranslatedAttribute('display_name') }}</label>
+
                                     {!! Voyager::formField($row, $dataType, $dataTypeContent) !!}
+
                                 </div>
                             @endforeach
 
                             <label for="permission">{{ __('voyager::generic.permissions') }}</label><br>
-                            <a href="#" class="permission-select-all">{{ __('voyager::generic.select_all') }}</a> / <a
-                                    href="#"
-                                    class="permission-deselect-all">{{ __('voyager::generic.deselect_all') }}</a>
+                            <a href="#" class="permission-select-all">{{ __('voyager::generic.select_all') }}</a> / <a href="#"  class="permission-deselect-all">{{ __('voyager::generic.deselect_all') }}</a>
                             <ul class="permissions checkbox">
                                 <?php
-                                $role_permissions = (isset($dataTypeContent)) ? $dataTypeContent->permissions->pluck('key')->toArray() : [];
+                                    $role_permissions = (isset($dataTypeContent)) ? $dataTypeContent->permissions->pluck('key')->toArray() : [];
                                 ?>
                                 @foreach(Voyager::model('Permission')->all()->groupBy('table_name') as $table => $permission)
-                                    @php($show_name=\Illuminate\Support\Str::title(str_replace('_',' ', $table)))
-                                    @if(isSuperAdmin() || (!isSuperAdmin() && $show_name!='Settings')&&$show_name!='Menus')
-                                        <li>
-                                            <input type="checkbox" id="{{$table}}" class="permission-group">
-                                            <label for="{{$table}}"><strong>{{$show_name}}</strong></label>
-                                            <ul>
-                                                @foreach($permission as $perm)
-                                                    @php($show_per_name=\Illuminate\Support\Str::title(str_replace('_', ' ', $perm->key)))
-                                                    @if(isSuperAdmin() ||
-                                                    (!isSuperAdmin() && $show_per_name!='Browse Bread'&& $show_per_name!='Browse Database'&& $show_per_name!='Browse Media'&& $show_per_name!='Browse Compass'))
-                                                        <li>
-                                                            <input type="checkbox" id="permission-{{$perm->id}}"
-                                                                   name="permissions[{{$perm->id}}]"
-                                                                   class="the-permission"
-                                                                   value="{{$perm->id}}"
-                                                                   @if(in_array($perm->key, $role_permissions)) checked @endif>
-                                                            <label for="permission-{{$perm->id}}">{{$show_per_name}}</label>
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                            </ul>
-                                        </li>
-                                    @endif
+                                    <li>
+                                        <input type="checkbox" id="{{$table}}" class="permission-group">
+                                        <label for="{{$table}}"><strong>{{\Illuminate\Support\Str::title(str_replace('_',' ', $table))}}</strong></label>
+                                        <ul>
+                                            @foreach($permission as $perm)
+                                                <li>
+                                                    <input type="checkbox" id="permission-{{$perm->id}}" name="permissions[{{$perm->id}}]" class="the-permission" value="{{$perm->id}}" @if(in_array($perm->key, $role_permissions)) checked @endif>
+                                                    <label for="permission-{{$perm->id}}">{{\Illuminate\Support\Str::title(str_replace('_', ' ', $perm->key))}}</label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div><!-- panel-body -->
@@ -107,25 +96,25 @@
         $('document').ready(function () {
             $('.toggleswitch').bootstrapToggle();
 
-            $('.permission-group').on('change', function () {
+            $('.permission-group').on('change', function(){
                 $(this).siblings('ul').find("input[type='checkbox']").prop('checked', this.checked);
             });
 
-            $('.permission-select-all').on('click', function () {
+            $('.permission-select-all').on('click', function(){
                 $('ul.permissions').find("input[type='checkbox']").prop('checked', true);
                 return false;
             });
 
-            $('.permission-deselect-all').on('click', function () {
+            $('.permission-deselect-all').on('click', function(){
                 $('ul.permissions').find("input[type='checkbox']").prop('checked', false);
                 return false;
             });
 
-            function parentChecked() {
-                $('.permission-group').each(function () {
+            function parentChecked(){
+                $('.permission-group').each(function(){
                     var allChecked = true;
-                    $(this).siblings('ul').find("input[type='checkbox']").each(function () {
-                        if (!this.checked) allChecked = false;
+                    $(this).siblings('ul').find("input[type='checkbox']").each(function(){
+                        if(!this.checked) allChecked = false;
                     });
                     $(this).prop('checked', allChecked);
                 });
@@ -133,14 +122,9 @@
 
             parentChecked();
 
-            $('.the-permission').on('change', function () {
+            $('.the-permission').on('change', function(){
                 parentChecked();
             });
-
-            $('.side-body input[data-slug-origin]').each(function (i, el) {
-                $(el).slugify();
-            });
-
         });
     </script>
 @stop

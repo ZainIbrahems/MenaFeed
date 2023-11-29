@@ -11,7 +11,7 @@
                             <img src="{{ Voyager::image($admin_logo_img) }}" alt="Logo Icon">
                         @endif
                     </div>
-{{--                    <div class="title">{{Voyager::setting('admin.title', 'VOYAGER')}}</div>--}}
+                    <div class="title">{{Voyager::setting('admin.title', 'VOYAGER')}}</div>
                 </a>
             </div><!-- .navbar-header -->
 
@@ -19,7 +19,7 @@
                  style="background-image:url({{ Voyager::image( Voyager::setting('admin.bg_image'), voyager_asset('images/bg.jpg') ) }}); background-size: cover; background-position: 0px;">
                 <div class="dimmer"></div>
                 <div class="panel-content">
-                    <img src="{{ $user_personal_picture }}" class="personal_picture" alt="{{ Auth::user()->name }} personal_picture">
+                    <img src="{{ $user_avatar }}" class="avatar" alt="{{ Auth::user()->name }} avatar">
                     <h4>{{ ucwords(Auth::user()->name) }}</h4>
                     <p>{{ Auth::user()->email }}</p>
 
